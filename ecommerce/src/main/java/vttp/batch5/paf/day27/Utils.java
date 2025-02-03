@@ -3,8 +3,7 @@ package vttp.batch5.paf.day27;
 import vttp.batch5.paf.day27.models.PurchaseOrder;
 
 import java.io.StringReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.json.Json;
@@ -21,16 +20,14 @@ public class Utils {
         JsonReader reader = Json.createReader(new StringReader(payload));
         JsonObject jo = reader.readObject();
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
         PurchaseOrder po = new PurchaseOrder();
         po.setPoId(jo.getString("poId", ""));
         po.setName(jo.getString("name"));
         po.setAddress(jo.getString("address"));
         try {
-            po.setDeliveryDate(df.parse(jo.getString("deliveryDate")));
+            po.setDeliveryDate(LocalDate.parse(jo.getString("deliveryDate")));
         } catch (Exception ex) {
-            po.setDeliveryDate(new Date());
+            po.setDeliveryDate(null);
         }
         po.setLineItems(toLineItem(jo.getJsonArray("lineItems")));
 
